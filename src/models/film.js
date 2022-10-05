@@ -14,13 +14,15 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Film.init({
-    id: DataTypes.UUID,
+    id: {
+      type:DataTypes.UUID,
+      primaryKey:true
+    },
     name: DataTypes.STRING,
-    release: DataTypes.Date,
-    
+    release: DataTypes.DATE,
   }, {
     sequelize,
-    modelName: 'Film',
+    modelName: 'film',
   });
   return Film;
 };

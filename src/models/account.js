@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Account extends Model {
     /**
@@ -10,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-       Account.belongsTo(models.User)
-       models.User.hasOne(Account)
+       Account.belongsTo(models.user)
+       models.user.hasOne(Account)
     }
   }
   Account.init({
@@ -21,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     userId: DataTypes.UUID
   }, {
     sequelize,
-    modelName: 'Account',
+    modelName: 'account',
   });
   return Account;
 };

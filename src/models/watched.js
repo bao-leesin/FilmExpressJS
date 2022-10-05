@@ -10,10 +10,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Watched.belongsTo(models.User)
-      Watched.belongsTo(models.Film)
-      models.User.hasMany(Watched)
-      models.Film.hasMany(Watched)
+      Watched.belongsTo(models.user)
+      Watched.belongsTo(models.film)
+      models.user.hasMany(Watched)
+      models.film.hasMany(Watched)
     }
   }
   Watched.init({
@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     filmId: DataTypes.UUID
 }, {
     sequelize,
-    modelName: 'Watched',
+    modelName: 'ratched',
   });
   return Watched;
 };

@@ -4,7 +4,7 @@ const express = require('express')
 const cors = require('cors')
 const morgan = require('morgan')
 
-const smt = require('./controllers/user_controller')
+const userController = require('./controllers/userController')
 
 const app = express()
 const port = process.env.PORT || 3001
@@ -21,9 +21,10 @@ app.use(morgan('combined'))
 // app.set('view engine', 'handlebars')
 // app.set('views', path.join(__dirname,'resources/views'))
 
-smt.findUser()
+userController.getUser()
 
-// findAll khong chay
+
+
 app.listen(port, () => { 
     console.log('Server is running on http://localhost:' + port);
 });

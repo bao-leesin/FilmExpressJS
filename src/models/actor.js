@@ -10,15 +10,17 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-    
     }
   }
   Actor.init({
-    id: DataTypes.UUID,
+    id: {
+      type:DataTypes.UUID,
+      primaryKey: true
+    },
     name: DataTypes.STRING
 }, {
     sequelize,
-    modelName: 'Actor',
+    modelName: 'actor',
   });
   return Actor;
 };

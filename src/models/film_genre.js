@@ -10,10 +10,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Film_genre.belongsTo(models.Actor)
-      Film_genre.belongsTo(models.Film)
-      models.Actor.hasMany(Film_genre)
-      models.Film.hasMany(Film_genre)
+      Film_genre.belongsTo(models.actor)
+      Film_genre.belongsTo(models.film)
+      models.actor.hasMany(Film_genre)
+      models.film.hasMany(Film_genre)
     }
   }
   Film_genre.init({
@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     genreName: DataTypes.STRING
 }, {
     sequelize,
-    modelName: 'Film_genre',
+    modelName: 'film_genre',
   });
   return Film_genre;
 };
