@@ -3,10 +3,9 @@ require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const morgan = require('morgan')
-
-const userController = require('./controllers/userController')
-
 const app = express()
+
+const routes = require('./router')
 const port = process.env.PORT || 3001
 
 app.use(express.json()) 
@@ -21,8 +20,7 @@ app.use(morgan('combined'))
 // app.set('view engine', 'handlebars')
 // app.set('views', path.join(__dirname,'resources/views'))
 
-userController.getUser()
-
+routes(app)
 
 
 app.listen(port, () => { 

@@ -7,13 +7,9 @@ const findUser =  () => {
                 raw:true
             })
             resolve(users)
-          
-            
         } catch (error) {
             reject(error)
-            
         }
-        
     })
 }
 

@@ -1,9 +1,19 @@
 // const User = require('./../models/user')
 const user = require('../data/userData')
 
+    
 let getUser =  async (req,res) => {
-    const data = await user.findUser()
-    console.log(data);
+    try {
+        const data = await user.findUser()
+        res.send(...data)
+    } catch (error) {
+        res.status(400).send(error.message)
+    }
 } 
 
-module.exports = {getUser}
+let createUser = async (req,res) => {}
+
+module.exports = 
+{getUser,
+createUser
+}
