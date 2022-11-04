@@ -1,7 +1,6 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
   class Rate extends Model {
     /**
@@ -9,20 +8,21 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
-      Rate.belongsTo(models.user)
-      Rate.belongsTo(models.film)
-      models.user.hasMany(Rate)
-      models.film.hasMany(Rate)
+    static associate({User,Film}) {
+      Rate.belongsTo(User, { foreignKey: "userId" });
+      Rate.belongsTo(Film, { foreignKey: "filmId" });
     }
   }
-  Rate.init({
-    rate: DataTypes.INTEGER,
-    filmId: DataTypes.UUID,
-    userId: DataTypes.UUID
-  }, {
-    sequelize,
-    modelName: 'rate',
-  });
+  Rate.init(
+    {
+      userId: DataTypes.UUID,
+      rate: DataTypes.INTEGER,
+      filmId: DataTypes.UUID,
+    },
+    {
+      sequelize,
+      modelName: "Rate",
+    }
+  );
   return Rate;
 };

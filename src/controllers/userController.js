@@ -1,19 +1,62 @@
-// const User = require('./../models/user')
-const user = require('../data/userData')
+const reader = require('../data/readData')
+const creator = require('../data/createData')
+const checker = require('../data/checkData')
 
-    
-let getUser =  async (req,res) => {
+const {
+  ValidationError,
+  FieldRequiredError,
+  AlreadyTakenError,
+  NotFoundError,
+} = require("../helper/customError");
+
+const { jwtSign } = require('../helper/jwt')
+const { bcryptHash, bcryptCompare } = require("../helper/bcrypt");
+
+const signIn = async (req, res, next) => {
     try {
-        const data = await user.findUser()
-        res.send(...data)
+      // const account = req.body
+      // const data = await reader.readUser(account)
+      // const accessToken = await jwtSign(data)
+      // res.send(accessToken)
+
+      const user  = req.body;
+     
+      const existentUser = await reader.readUser(user.username);
+      if (!existentUser) throw new NotFoundError("sign in first");
+
+      const pwd = await bcryptCompare(user.password, existentUser.password);
+
+      if (!pwd) throw new ValidationError("Wrong password ");
+  
+      const token = await jwtSign(user)
+      console.log(token);
+
+      res.send(token)
     } catch (error) {
-        res.status(400).send(error.message)
+      next(error)
     }
-} 
+  };
+  
 
-let createUser = async (req,res) => {}
+const signUp = async (req, res, next) => {
+    try {
+      const { username, password ,email } = req.body;
+      const user =  { name:username, password: await bcryptHash(password) ,email }
+      if (!username) throw new FieldRequiredError(`A username`);
+      if (!email) throw new FieldRequiredError(`An email`);
+      if (!password) throw new FieldRequiredError(`A password`);
 
-module.exports = 
-{getUser,
-createUser
-}
+      const userExists = await checker.checkUser(username,email)
+      if (userExists.length !== 0) throw new AlreadyTakenError("try logging in");
+     
+      const newUser = await creator.createUser(user)
+
+      const token = await jwtSign(newUser);
+  
+      res.send(token)
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  module.exports = { signUp, signIn };
