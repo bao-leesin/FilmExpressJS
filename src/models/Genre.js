@@ -41,7 +41,7 @@ class Genre{
         [this.#idFilm],
         (err,rows) =>{
         if (err) throw err
-        if(rows.length === 0) throw new NotFoundError() 
+        // if(rows.length === 0) throw new NotFoundError() 
         resolve(rows)
         })
         connection.release()
@@ -62,7 +62,7 @@ class Genre{
         [this.#idFilm,this.#name],
         (err,rows) =>{
         if (err) throw err
-        // if(rows.length === 0) throw new NotFoundError() 
+        if(rows.length === 0) throw new NotFoundError() 
         resolve(rows)
         })
         connection.release()
@@ -83,7 +83,7 @@ class Genre{
         [this.#name, this.#idFilm],
         (err,rows) =>{
         if (err) throw err
-        // if(rows.length === 0) throw new NotFoundError() 
+        if(rows.length === 0) throw new NotFoundError() 
         resolve(rows)
         })
         connection.release()
@@ -105,7 +105,7 @@ class Genre{
         [this.#idFilm],
         (err,rows) =>{
         if (err) throw err
-        // if(rows.length === 0) throw new NotFoundError() 
+        if(rows.length === 0) throw new NotFoundError() 
         resolve(rows)
         })
         connection.release()

@@ -53,15 +53,22 @@ const User  = require("../models/User");
 }
 
 const showHomePage =async (req,res,next) =>{
-  let film = new Film();
+  const view = 500
+  const topNew= 5
+  const topRating = 5
+  const topLiked = 5
   try {
+  let film = new Film();
+  film.setView = view
   const hotFilm = await film.getFilmByViews()
+  film.setTop = topRating
   const appreciatedFilm = await film.getFilmByRatings()
+  film.setTop = topNew
   const newFilm = await film.getNewFilm();
   const dataFilm = {
-      hotFilm,
-      appreciatedFilm,
-      newFilm
+      phimHot:hotFilm,
+      phimDanhGiaCao:appreciatedFilm,
+      phimMoi:newFilm
   }
   res.send(dataFilm)
   } catch (error) {

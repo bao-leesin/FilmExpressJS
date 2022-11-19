@@ -60,13 +60,32 @@ class Film{
       return this.#idUser;
     }
 
+    set setView(view) {
+      this.#view = view;
+    }
+
+    get getView() {
+      return this.#view;
+    }
+
+
     set setRating(rating) {
       this.#rating = rating;
     }
   
     get getRating() {
       return this.#rating;
+    }    
+
+    set setTop(top) {
+      this.#top = top;
     }
+  
+    get getTop() {
+      return this.#top;
+    }
+  
+   
 
     set setImage(image) {
       this.#image = image;

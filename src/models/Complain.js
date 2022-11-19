@@ -46,6 +46,55 @@ class Complain{
         this.#solution = solution
     }
 
+
+// ***********************************************
+// Nhóm chức năng xem
+
+    getComplainByTopic(){
+      return new Promise((resolve, reject) => {
+      pool.getConnection( (err,connection) =>{ 
+      try {
+      const query = "SELECT  "
+      if (err) throw err
+      connection.query(
+      query,
+      [],
+      (err,rows) =>{
+      if (err) throw err
+      if(rows.length === 0) throw new NotFoundError() 
+      resolve(rows)
+      })
+      connection.release()
+      }catch (error) {
+      reject(error)
+      console.log(error)
+      }})})
+    }
+
+    getTopic(){
+      return new Promise((resolve, reject) => {
+      pool.getConnection( (err,connection) =>{ 
+      try {
+      const query = "SELECT "
+      if (err) throw err
+      connection.query(
+      query,
+      [],
+      (err,rows) =>{
+      if (err) throw err
+      if(rows.length === 0) throw new NotFoundError() 
+      resolve(rows)
+      })
+      connection.release()
+      }catch (error) {
+      reject(error)
+      console.log(error)
+      }})})
+    }
+
+    // ****************************************
+    // Nhóm chức năng thêm
+
     createComplain(){
         return new Promise((resolve, reject) => {
         pool.getConnection( (err,connection) =>{ 
@@ -131,6 +180,7 @@ class Complain{
         }})})
     }
 
+
 // *****************************************************************
     // Nhóm chức năng xoá
 
@@ -138,11 +188,13 @@ class Complain{
         return new Promise((resolve, reject) => {
         pool.getConnection( (err,connection) =>{ 
         try {
-        const query = "DELETE "
+        const query = "DELETE FROM chu_de_khieu_nai__ds_khieu_nai WHERE idChuDe = ? ;" + 
+                      "DELETE FROM chu_de_khieu_nai__ds_phuong_huong_giai_quyet WHERE idChuDe = ? ;"+
+                      "DELETE FROM chu_de_khieu_nai WHERE idChuDe = ? ;"
         if (err) throw err
         connection.query(
         query,
-        [],
+        [this.#topic, this.#topic, this.#topic],
         (err,rows) =>{
         if (err) throw err
         if(rows.length === 0) throw new NotFoundError() 
