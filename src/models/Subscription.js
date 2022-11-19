@@ -19,7 +19,7 @@ class Subscription{
         this.#validity = validity
     }
 
-    set setId(id) {
+      set setId(id) {
         this.#id = id;
       }
     
@@ -68,7 +68,7 @@ class Subscription{
         (err,rows) =>{
         if (err) throw err
         if(rows.length === 0) throw new NotFoundError() 
-        id=rows.insertId
+        this.#id=rows.insertId
         resolve(rows)
         })
         connection.release()
@@ -82,11 +82,11 @@ class Subscription{
         return new Promise((resolve, reject) => {
         pool.getConnection( (err,connection) =>{ 
         try {
-        const query = "UPDATE goi_xem_phim SET tenGoi = ?, giaTien = ?, thoiHanGoi = ?"
+        const query = "UPDATE goi_xem_phim SET tenGoi = ?, giaTien = ?, thoiHanGoi = ? WHERE idGoi = ?"
         if (err) throw err
         connection.query(
         query,
-        [this.#name,this.#price,this.#validity],
+        [this.#name,this.#price,this.#validity,this.#id],
         (err,rows) =>{
         if (err) throw err
         if(rows.length === 0) throw new NotFoundError() 

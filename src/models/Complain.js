@@ -16,6 +16,29 @@ class Complain{
     #idUser;
     #idAdmin;
 
+    set setId(id) {
+        this.#id = id;
+      }
+    
+      get getId() {
+        return this.#id;
+      }
+
+      set setTitle(title) {
+        this.#title = title;
+      }
+    
+      get getTitle() {
+        return this.#title;
+      }
+      set setContent(content) {
+        this.#content = content;
+      }
+    
+      get getContent() {
+        return this.#content;
+      } 
+
     constructor(topic,title,content,solution){
         this.#topic = topic
         this.#title = title
