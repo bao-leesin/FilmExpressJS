@@ -12,12 +12,28 @@ class Subscription{
     #price;
     #validity;
 
-    constructor(name,price,validity){
+    constructor(id,name,price,validity){
+        this.#id = id
         this.#name = name
         this.#price = price
         this.#validity = validity
     }
 
+    set setId(id) {
+        this.#id = id;
+      }
+    
+      get getId() {
+        return this.#id;
+      }
+  
+      set setName(name) {
+        this.#name = name;
+      }
+    
+      get getName() {
+        return this.#name;
+      }
 
     getAllSub(){
         return new Promise((resolve, reject) => {
@@ -44,14 +60,15 @@ class Subscription{
         return new Promise((resolve, reject) => {
         pool.getConnection( (err,connection) =>{ 
         try {
-        const query = "INSERT INTO goi_xem_phim VALUES(?,?,?)"
+        const query = "INSERT INTO goi_xem_phim VALUES(?,?,?,?)"
         if (err) throw err
         connection.query(
         query,
-        [this.#name,this.#price,this.#validity],
+        [this.#id,this.#name,this.#price,this.#validity],
         (err,rows) =>{
         if (err) throw err
         if(rows.length === 0) throw new NotFoundError() 
+        id=rows.insertId
         resolve(rows)
         })
         connection.release()

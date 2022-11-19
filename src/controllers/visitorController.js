@@ -39,10 +39,10 @@ const User  = require("../models/User");
     if (!email) throw new FieldRequiredError(`A email`);
    
     const hashPassword = await bcryptHash(matKhau);
-
     let user = new User(tenDangNhap,hashPassword,vaiTro,diaChi,ngaySinh,email,tenDayDu,gioiTinh);
-    const newUser = await user.signUp()
-
+    await user.signUp()
+    const newUser = await user.getUserById()
+      res.send(newUser)
     if(newUser){
       const jwt = await jwtSign(newUser)
       res.send(jwt)

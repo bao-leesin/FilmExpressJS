@@ -122,16 +122,10 @@ class User extends Visitor{
                 ],
                 (err, rows) => {
                   if (err) throw err;
+                  this.#id = rows.insertId 
+                  resolve(rows.insertId)
                 }
               );
-              connection.query(
-                "Select * from nguoi_dung_co_tai_khoan where tenDangNhap = ?",
-                [this.#username],
-                (err, rows) => {
-                    if (err) throw err;
-                    else resolve(rows[0])
-                }
-              )
               connection.release();
             } catch (error) {
               connection.release();
@@ -141,7 +135,7 @@ class User extends Visitor{
         });
       }
 
-      getUser(){
+      getUserById(){
         return new Promise((resolve, reject) => {
         pool.getConnection( (err,connection) =>{ 
         try {
@@ -149,7 +143,7 @@ class User extends Visitor{
         if (err) throw err
         connection.query(
         query,
-        [this.id],
+        [this.#id],
         (err,rows) =>{
         if (err) throw err
         // if(rows.length === 0) throw new NotFoundError() 
