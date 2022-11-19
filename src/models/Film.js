@@ -5,7 +5,7 @@ const {
   NotFoundError,
 } = require("../helper/customError");
 const pool = require("../config/configMysql");
-const User = require("./User");
+
 
 class Film{
     #id
@@ -186,7 +186,7 @@ class Film{
         return new Promise((resolve, reject) => {
           pool.getConnection( (err,connection) =>{ if (err) throw err
           try {
-              const query = "SELECT * FROM phim WHERE idPhim IN (SELECT idPhim FROM khach_hang_danh_gia ORDER BY soSaoDanhGia DESC) LIMIT ?"
+              const query = "SELECT * FROM phim ORDER BY DESC  LIMIT ?"
             connection.query(
               query,
               [this.#top],
@@ -379,6 +379,26 @@ class Film{
         (err,rows) =>{
         if (err) throw err
         // if(rows.length === 0) throw new NotFoundError() 
+        resolve(rows)
+        })
+        connection.release()
+        }catch (error) {
+        reject(error)
+        console.log(error)
+        }})})
+      }
+
+      updateRatingFilm(){
+        return new Promise((resolve, reject) => {
+        pool.getConnection( (err,connection) =>{ 
+        try {
+        const query = "UPDATE phim SET danhGiaPhim = (SELECT round(AVG(soSaoDanhGia)) AS tb FROM khach_hang_danh_gia WHERE idPhim = ?) WHERE idPhim = ?"
+        if (err) throw err
+        connection.query(
+        query,
+        [],
+        (err,rows) =>{
+        if (err) throw err
         resolve(rows)
         })
         connection.release()

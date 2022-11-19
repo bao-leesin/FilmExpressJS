@@ -9,4 +9,5 @@ router.use('/show',promotionController.getAllPromotion)
 router.use('/status/update/',promotionController.updateStatusPromotion)
 router.use('/title/search/:tieuDeChuongTrinhKhuyenMai',promotionController.getPromotionsByTitle)
 
+
 module.exports = router

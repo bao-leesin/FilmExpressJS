@@ -187,9 +187,9 @@ try {
         actor.setIdFilm = idFilm
         genre.setIdFilm = idFilm
         try {
-            await film.deleteFilm()
             await actor.deleteActorsInFilm()
             await genre.deleteGenresInFilm()
+            await film.deleteFilm()
             const films = await film.getAllFilm()
             res.send(films)
         } catch (error) {
@@ -206,6 +206,7 @@ try {
             film.setId = idPhim
             film.setRating = soSaoDanhGia
             await film.rateFilm()
+            await film.updateRatingFilm()
             const rating = await film.showRatingFilm()
             res.send({danhGia: rating})            
         } catch (error) {
@@ -218,6 +219,7 @@ try {
         try {
             let film = new Film()
             film.setId = idFilm
+            await film.updateRatingFilm()
             const rating = await film.showRatingFilm()
             res.send({danhGia: rating})
         } catch (error) {

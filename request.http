@@ -27,6 +27,7 @@ content-type: application/json
     "gioiTinh" : "bisexual"
 }
 
+
 ###
 
 POST   http://localhost:3003/apis/film/rating/create

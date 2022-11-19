@@ -1,4 +1,6 @@
 const  Visitor  = require("./Visitor");
+
+
 const {
   ValidationError,
   FieldRequiredError,
@@ -8,8 +10,6 @@ const {
 const pool = require("../config/configMysql");
 class User extends Visitor{
     #id
-    #username;
-    #password;
     #role
     #address;
     #birthday;
@@ -17,8 +17,11 @@ class User extends Visitor{
     #fullname;
     #sex;
     #idFilm;
+    #idSubscription;
+    #subscriptionDay;
+    #idPromotion
     constructor(id,username,password,role,address,birthday,email,fullname,sex){
-        super(username,password);
+        super(username, password);
         this.#id = id;
         this.#role = role
         this.#address =address
@@ -92,6 +95,35 @@ class User extends Visitor{
         return this.#sex
     }
 
+    set setSubsciption(idSubscription){
+      this.#idSubscription = idSubscription
+    }
+
+    get getSubsciption(){
+      return this.#idSubscription
+    }
+
+    set setSubsciptionDay(subscriptionDay){
+      this.#subscriptionDay = subscriptionDay
+    }
+
+    get getSubsciptionDay(){
+      return this.#subscriptionDay
+    }
+
+    set setPromotion(Promotion){
+      this.#idPromotion =Promotion
+    }
+
+    get getPromotion(){
+      return this.#idPromotion
+    }
+
+
+
+// **********************
+// Nhóm chức năng thêm tạo
+
     signUp() {
         return new Promise((resolve, reject) => {
           pool.getConnection((err, connection) => {
@@ -110,7 +142,7 @@ class User extends Visitor{
               connection.query(
                 "INSERT INTO nguoi_dung_co_tai_khoan VALUES (?,?,?,?,?,?,?,?,?)",
                 [
-                  null,
+                  this.#id,
                   this.#username,
                   this.#password,
                   this.#role,
@@ -133,6 +165,26 @@ class User extends Visitor{
             }
           });
         });
+      }
+
+      subscribe(){
+        return new Promise((resolve, reject) => {
+        pool.getConnection( (err,connection) =>{ 
+        try {
+        const query = "INSERT INTO khach_hang_dang_ky_goi VALUES(?,?,?,?)"
+        if (err) throw err
+        connection.query(
+        query,
+        [this.#id,this.#idSubscription,this.#subscriptionDay,this.#idPromotion],
+        (err,rows) =>{
+        if (err) throw err
+        resolve(rows)
+        })
+        connection.release()
+        }catch (error) {
+        reject(error)
+        console.log(error)
+        }})})
       }
 
       getUserById(){

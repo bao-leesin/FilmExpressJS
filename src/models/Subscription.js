@@ -10,13 +10,14 @@ class Subscription{
     #id;
     #name;
     #price;
-    #validity;
+    #quality;
+    #idUser;
 
-    constructor(id,name,price,validity){
+    constructor(id,name,price,quality){
         this.#id = id
         this.#name = name
         this.#price = price
-        this.#validity = validity
+        this.#quality = quality
     }
 
       set setId(id) {
@@ -25,6 +26,14 @@ class Subscription{
     
       get getId() {
         return this.#id;
+      }
+
+      set setIdUser(idUser) {
+        this.#idUser = idUser;
+      }
+    
+      get getIdUser(){
+        return this.#idUser;
       }
   
       set setName(name) {
@@ -56,6 +65,30 @@ class Subscription{
         }})})
     }
 
+    getSubOfUser(){
+      return new Promise((resolve, reject) => {
+      pool.getConnection( (err,connection) =>{ 
+      try {
+      const query = "SELECT A.idKhachHang, B.tenGoi, B.giaTien, B.chatLuong, A.ngayDangKiGoi, A.khuyenMaiSuDung" +
+      "FROM goi_xem_phim AS B "+
+      "INNER JOIN khach_hang_dang_ki_goi AS A" +
+      "ON A.idGoi = B.idGoi" +
+      "WHERE A.idKhachHang = ?"
+      if (err) throw err
+      connection.query(
+      query,
+      [this.#idUser],
+      (err,rows) =>{
+      if (err) throw err
+      resolve(rows)
+      })
+      connection.release()
+      }catch (error) {
+      reject(error)
+      console.log(error)
+      }})})
+    }
+
     createSub(){
         return new Promise((resolve, reject) => {
         pool.getConnection( (err,connection) =>{ 
@@ -64,7 +97,7 @@ class Subscription{
         if (err) throw err
         connection.query(
         query,
-        [this.#id,this.#name,this.#price,this.#validity],
+        [this.#id,this.#name,this.#price,this.#quality],
         (err,rows) =>{
         if (err) throw err
         if(rows.length === 0) throw new NotFoundError() 
@@ -86,7 +119,7 @@ class Subscription{
         if (err) throw err
         connection.query(
         query,
-        [this.#name,this.#price,this.#validity,this.#id],
+        [this.#name,this.#price,this.#quality,this.#id],
         (err,rows) =>{
         if (err) throw err
         if(rows.length === 0) throw new NotFoundError() 

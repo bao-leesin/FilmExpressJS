@@ -29,17 +29,26 @@ const User  = require("../models/User");
    }
 
    const register = async (req,res,next) => {
-    const {tenDangNhap,matKhau,vaiTro,diaChi,ngaySinh,email,tenDayDu,gioiTinh} = req.body;
-    console.log(req.body,gioiTinh);
+   const tenDangNhap = req.body.tenDangNhap
+   const matKhau = req.body.matKhau
+   const vaiTro = req.body.vaiTro
+   const diaChi = req.body.diaChi
+   const ngaySinh = req.body.ngaySinh
+   const email = req.body.email
+   const tenDayDu = req.body.tenDayDu
+   const gioiTinh = req.body.gioiTinh
+
+    console.log(tenDangNhap);
+
     try { 
-  if (!tenDangNhap) throw new FieldRequiredError(`A tenDangNhap`);
+    if (!tenDangNhap) throw new FieldRequiredError(`A tenDangNhap`);
     if (!matKhau) throw new FieldRequiredError(`A matKhau`);
     if (!vaiTro) throw new FieldRequiredError(`A vaiTro`);
     if (!diaChi) throw new FieldRequiredError(`A diaChi`);
     if (!email) throw new FieldRequiredError(`A email`);
    
     const hashPassword = await bcryptHash(matKhau);
-    let user = new User(tenDangNhap,hashPassword,vaiTro,diaChi,ngaySinh,email,tenDayDu,gioiTinh);
+    let user = new User(null,tenDangNhap,hashPassword,vaiTro,diaChi,ngaySinh,email,tenDayDu,gioiTinh);
     await user.signUp()
     const newUser = await user.getUserById()
       res.send(newUser)

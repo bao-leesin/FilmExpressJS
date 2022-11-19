@@ -50,6 +50,29 @@ class Complain{
 // ***********************************************
 // Nhóm chức năng xem
 
+    getAllComplain(){
+      return new Promise((resolve, reject) => {
+      pool.getConnection( (err,connection) =>{ 
+      try {
+      const query = "SELECT A.idKhieuNai, A.tieuDeKhieuNai, A.noiDungKhieuNai, C.tenChuDe, C.trangThai" +
+      "FROM khach_hang_khieu_nai AS A" +
+      "INNER JOIN chu_de_khieu_nai__ds_khieu_nai AS B ON A.idKhieuNai = B.idKhieuNai"  +
+      "INNER JOIN chu_de_khieu_nai AS C ON B.idChuDe = C.idChuDe"  
+      if (err) throw err
+      connection.query(
+      query,
+      [],
+      (err,rows) =>{
+      if (err) throw err
+      resolve(rows)
+      })
+      connection.release()
+      }catch (error) {
+      reject(error)
+      console.log(error)
+      }})})
+    }
+
     getComplainByTopic(){
       return new Promise((resolve, reject) => {
       pool.getConnection( (err,connection) =>{ 
@@ -71,11 +94,13 @@ class Complain{
       }})})
     }
 
-    getTopic(){
+    getAllTopic(){
       return new Promise((resolve, reject) => {
       pool.getConnection( (err,connection) =>{ 
       try {
-      const query = "SELECT "
+      const query = "SELECT A.idChuDe, A.tenChuDe, A.trangThai,  B.noiDung AS cachGiaiQuyet, B.idAdminDongGop" + 
+                    "FROM  chu_de_khieu_nai AS A " +
+                    "INNER JOIN  chu_de_khieu_nai__ds_phuong_huong_giai_quyet AS B ON A.idChuDe = B.idChuDe "
       if (err) throw err
       connection.query(
       query,

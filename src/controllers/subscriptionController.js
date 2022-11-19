@@ -47,11 +47,24 @@ const getAllSub = async (req,res,next) => {
     }
 }
 
+const getSubOfUser = async (req,res,next) => {
+    const idUser = req.params.idKhachHang
+    try {
+        let sub = new Subscription()
+        sub.setIdUser = idUser
+        const output = await sub.getSubOfUser()
+        res.send(output)
+    } catch (error) {
+        res.status(400).send(error.message)
+    }
+}
+
 
 
 module.exports = {
     createSub,
     updateSub,
     deleteSub,
-    getAllSub
+    getAllSub,
+    getSubOfUser
 }
