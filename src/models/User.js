@@ -15,7 +15,8 @@ class User extends Visitor{
     #birthday;
     #email;
     #fullname;
-    #sex
+    #sex;
+    #idFilm;
     constructor(id,username,password,role,address,birthday,email,fullname,sex){
         super(username,password);
         this.#id = id;
@@ -34,6 +35,14 @@ class User extends Visitor{
     get getId(){
         return this.#id
     }
+
+    set setIdFilm(idFilm){
+      this.#idFilm = idFilm
+  }
+
+  get getIdFilm(){
+      return this.#idFilm
+  }
 
     set setRole(role){
         this.#role = role
@@ -143,7 +152,7 @@ class User extends Visitor{
         [this.id],
         (err,rows) =>{
         if (err) throw err
-        if(rows.length === 0) throw new NotFoundError() 
+        // if(rows.length === 0) throw new NotFoundError() 
         resolve(rows)
         })
         connection.release()
@@ -164,7 +173,7 @@ class User extends Visitor{
         [],
         (err,rows) =>{
         if (err) throw err
-        if(rows.length === 0) throw new NotFoundError() 
+        // if(rows.length === 0) throw new NotFoundError() 
         resolve(rows)
         })
         connection.release()
@@ -185,7 +194,7 @@ class User extends Visitor{
         [this.#id],
         (err,rows) =>{
         if (err) throw err
-        if(rows.length === 0) throw new NotFoundError() 
+        // if(rows.length === 0) throw new NotFoundError() 
         resolve(rows[0])
         })
         connection.release()
@@ -215,6 +224,72 @@ class User extends Visitor{
         console.log(error)
         }})})
     }
+
+    likeFilm(){
+      return new Promise((resolve, reject) => {
+      pool.getConnection( (err,connection) =>{ 
+      try {
+      const query = "INSERT INTO phim_yeu_thich VALUES(?,?)"
+      if (err) throw err
+      connection.query(
+      query,
+      [this.#id,this.#idFilm],
+      (err,rows) =>{
+      if (err) throw err
+      // if(rows.length === 0) throw new NotFoundError() 
+      resolve(rows)
+      })
+      connection.release()
+      }catch (error) {
+      reject(error)
+      console.log(error)
+      }})})
+    }
+
+    unlikeFilm(){
+      return new Promise((resolve, reject) => {
+      pool.getConnection( (err,connection) =>{ 
+      try {
+      const query = "DELETE FROM phim_yeu_thich WHERE idKhachHang = ? AND idPhim = ?"
+      if (err) throw err
+      connection.query(
+      query,
+      [this.#id,this.#idFilm],
+      (err,rows) =>{
+      if (err) throw err
+      // if(rows.length === 0) throw new NotFoundError() 
+      resolve(rows)
+      })
+      connection.release()
+      }catch (error) {
+      reject(error)
+      console.log(error)
+      }})})
+    }
+    
+    getLikedFilm(){
+      return new Promise((resolve, reject) => {
+      pool.getConnection( (err,connection) =>{ 
+      try {
+      const query = "SELECT idPhim,tenPhim, danhGiaPhim, phim.luotXem FROM phim WHERE idPhim IN (SELECT idPhim FROM phim_yeu_thich WHERE idKhachHang = ? ) "
+      if (err) throw err
+      connection.query(
+      query,
+      [this.#id],
+      (err,rows) =>{
+      if (err) throw err
+      // if(rows.length === 0) throw new NotFoundError() 
+      resolve(rows)
+      })
+      connection.release()
+      }catch (error) {
+      reject(error)
+      console.log(error)
+      }})})
+    }
+
+
+   
 }
 
 module.exports = User

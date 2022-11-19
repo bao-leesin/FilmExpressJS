@@ -3,6 +3,7 @@ const Film = require("../models/Film");
 const Genre = require("../models/Genre");
 
 
+
 const getAllFilm = async (req,res,next) => {
     let film = new Film()
     try {
@@ -10,12 +11,16 @@ const getAllFilm = async (req,res,next) => {
         const data = await Promise.all (films.map( async (film) => {
             let actor = new Actor()
             let genre = new Genre()
+            let films= new Film()
             actor.setIdFilm = film.idPhim
             genre.setIdFilm =  film.idPhim
+            films.setId = film.idPhim
             const actors =  await actor.getActorsByIdFilm()
             film.dienVien = actors
             const genres =  await genre.getGenresByIdFilm()
             film.theLoai = genres
+            const images = await films.getFilmImages()
+            film.duongDanAnh = images
             // console.log(film);
             return film
         }))
@@ -82,7 +87,8 @@ const createFilm = async (req,res,next) => {
         luotXem,
         ngayChieu,
         dienVien,
-        theLoai
+        theLoai,
+        duongDanAnh
     } = req.body
 try {
     let film = new Film(tenPhim,moTa,danhGia,trailer,luotXem,ngayChieu)
@@ -90,26 +96,40 @@ try {
     let genre = new Genre()
     await film.createFilm()
     const idFilm = film.getId
-    dienVien.forEach(async (actor) => {
-        let actors = new Actor()
-        actors.setIdFilm = idFilm
-        actors.setName = actor.tenDienVien
-        await actors.getIdByName()
-        await actors.createActorsInFilm()
-    })
-    theLoai.map( async(genre) => {
-        let genres = new Genre()
-        genres.setIdFilm = idFilm
-        genres.setName = genre.theLoai
-        await genres.createGenresInFilm()
-    })
+    if(dienVien){
+        dienVien.forEach(async (actor) => {
+            let actors = new Actor()
+            actors.setIdFilm = idFilm
+            actors.setName = actor.tenDienVien
+            await actors.getIdByName()
+            await actors.createActorsInFilm()
+        })
+    }
+    if(theLoai){
+        theLoai.forEach( async(genre) => {
+            let genres = new Genre()
+            genres.setIdFilm = idFilm
+            genres.setName = genre.theLoai
+            await genres.createGenresInFilm()
+        })
+    }
+    
+    if(duongDanAnh){
+        duongDanAnh.forEach( async(image) => {
+            film.setImage = image.duongDanAnh
+            film.createFilmImages()
+        })
+    }
+   
     actor.setIdFilm = idFilm
     genre.setIdFilm = idFilm
     const films = await film.getFilmById()
     const actors = await actor.getActorsByIdFilm()
     const genres = await genre.getGenresByIdFilm()
+    const images = await film.getFilmImages()
     films.dienVien = actors
     films.theLoai = genres
+    films.duongDanAnh = images
     res.send(films)
 } catch (error) {
     res.status(400).send(error.message)
@@ -177,15 +197,60 @@ try {
         }
     }
 
-    
 
+   const createRatingFilm = async (req,res,next) => {
+        const {idKhachHang,idPhim,soSaoDanhGia} = req.body
+        try {
+            let film = new Film()
+            film.setIdUser = idKhachHang
+            film.setId = idPhim
+            film.setRating = soSaoDanhGia
+            await film.rateFilm()
+            const rating = await film.showRatingFilm()
+            res.send({danhGia: rating})            
+        } catch (error) {
+            res.status(400).send(error.message)
+        }
+   }
 
-module.exports = {
+   const showRatingFilm = async (req,res,next) => {
+        const idFilm = req.params.id
+        try {
+            let film = new Film()
+            film.setId = idFilm
+            const rating = await film.showRatingFilm()
+            res.send({danhGia: rating})
+        } catch (error) {
+            res.status(400).send(error.message)
+        }
+   }
+
+   const createFilmImages = async (req,res,next) => {
+        const idFilm = req.params.id
+        const images = req.body.duongDanAnh
+        try {
+            let film = new Film()
+            film.setId = idFilm
+            images.forEach( async (image) => {
+                film.setImage = image.duongDanAnh
+                await film.createFilmImages()
+            })
+            const data = await film.getFilmById()
+           res.send(data)
+        } catch (error) {
+            res.status(400).send(error.message)
+        }
+   }
+
+   module.exports = {
+    getAllFilm,
     getFilmByGenres,
     getFilmByName,
-    getAllFilm,
     getFilmById,
     createFilm,
     updateFilm,
-    deleteFilm
+    deleteFilm,
+    createRatingFilm,
+    showRatingFilm,
+    createFilmImages
 }

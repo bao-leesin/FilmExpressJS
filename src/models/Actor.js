@@ -78,7 +78,6 @@ class Actor{
         [this.#idFilm],
         (err,rows) =>{
         if (err) throw err
-        if(rows.length === 0) throw new NotFoundError() 
         resolve(rows)
         })
         connection.release()
@@ -171,7 +170,6 @@ class Actor{
         console.log(error)
         }})})
     }
-
     
 }
 

@@ -6,39 +6,28 @@ const {
   } = require("../helper/customError");
   const pool = require("../config/configMysql");
 
-class Genre{
-    #idFilm
-    #name
-    constructor(idFilm,name){
-    this.#idFilm = idFilm
-    this.#name = name
-    }
+class Subscription{
+    #id;
+    #name;
+    #price;
+    #validity;
 
-    set setName(name){
+    constructor(name,price,validity){
         this.#name = name
+        this.#price = price
+        this.#validity = validity
     }
 
-    get getName(){
-        return this.#name;
-    }
 
-    set setIdFilm(idFilm){
-        this.#idFilm = idFilm
-    }
-
-    get getIdFilm(){
-        return this.#idFilm;
-    }
-
-    getGenresByIdFilm(){
+    getAllSub(){
         return new Promise((resolve, reject) => {
         pool.getConnection( (err,connection) =>{ 
         try {
-        const query = "SELECT theLoai from phim__the_loai where idPhim = ?" 
+        const query = "SELECT * FROM goi_xem_phim"
         if (err) throw err
         connection.query(
         query,
-        [this.#idFilm],
+        [],
         (err,rows) =>{
         if (err) throw err
         if(rows.length === 0) throw new NotFoundError() 
@@ -51,18 +40,18 @@ class Genre{
         }})})
     }
 
-    createGenresInFilm(){
+    createSub(){
         return new Promise((resolve, reject) => {
         pool.getConnection( (err,connection) =>{ 
         try {
-        const query = "INSERT INTO phim__the_loai VALUES(?,?) "
+        const query = "INSERT INTO goi_xem_phim VALUES(?,?,?)"
         if (err) throw err
         connection.query(
         query,
-        [this.#idFilm,this.#name],
+        [this.#name,this.#price,this.#validity],
         (err,rows) =>{
         if (err) throw err
-        // if(rows.length === 0) throw new NotFoundError() 
+        if(rows.length === 0) throw new NotFoundError() 
         resolve(rows)
         })
         connection.release()
@@ -72,40 +61,18 @@ class Genre{
         }})})
     }
 
-    updateGenresInFilm(){
+    updateSub(){
         return new Promise((resolve, reject) => {
         pool.getConnection( (err,connection) =>{ 
         try {
-        const query = "UPDATE phim__the_loai SET theLoai = ? WHERE idPhim = ?"
+        const query = "UPDATE goi_xem_phim SET tenGoi = ?, giaTien = ?, thoiHanGoi = ?"
         if (err) throw err
         connection.query(
         query,
-        [this.#name, this.#idFilm],
+        [this.#name,this.#price,this.#validity],
         (err,rows) =>{
         if (err) throw err
-        // if(rows.length === 0) throw new NotFoundError() 
-        resolve(rows)
-        })
-        connection.release()
-        }catch (error) {
-        reject(error)
-        console.log(error)
-        }})})
-        
-    }
-
-    deleteGenresInFilm(){
-        return new Promise((resolve, reject) => {
-        pool.getConnection( (err,connection) =>{ 
-        try {
-        const query = "DELETE FROM phim__the_loai WHERE idPhim = ?"
-        if (err) throw err
-        connection.query(
-        query,
-        [this.#idFilm],
-        (err,rows) =>{
-        if (err) throw err
-        // if(rows.length === 0) throw new NotFoundError() 
+        if(rows.length === 0) throw new NotFoundError() 
         resolve(rows)
         })
         connection.release()
@@ -115,6 +82,26 @@ class Genre{
         }})})
     }
 
+    deleteSub(){
+        return new Promise((resolve, reject) => {
+        pool.getConnection( (err,connection) =>{ 
+        try {
+        const query = "DELETE FROM goi_xem_phim WHERE idGoi = ?"
+        if (err) throw err
+        connection.query(
+        query,
+        [this.#id],
+        (err,rows) =>{
+        if (err) throw err
+        if(rows.length === 0) throw new NotFoundError() 
+        resolve(rows)
+        })
+        connection.release()
+        }catch (error) {
+        reject(error)
+        console.log(error)
+        }})})
+    }
 }
 
-module.exports = Genre
+module.exports = Subscription

@@ -48,5 +48,6 @@ const updateUserInfo = async (req,res,next) => {
 
 module.exports = {
     getUserInfo,
-    updateUserInfo
+    updateUserInfo,
+    getAllUser
 }

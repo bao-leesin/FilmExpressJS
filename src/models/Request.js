@@ -16,3 +16,5 @@ class Request{
     
     constructor (type, idUser, amount, )
 }
+
+module.exports = Request
