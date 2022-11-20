@@ -10,6 +10,8 @@ const {
 const pool = require("../config/configMysql");
 class User extends Visitor{
     #id
+    #username;
+    #password;
     #role
     #address;
     #birthday;
@@ -21,8 +23,10 @@ class User extends Visitor{
     #subscriptionDay;
     #idPromotion
     constructor(id,username,password,role,address,birthday,email,fullname,sex){
-        super(username, password);
-        this.#id = id;
+        super()
+        this.#id = id
+        this.#username = username
+        this.#password = password
         this.#role = role
         this.#address =address
         this.#birthday = birthday
@@ -37,6 +41,23 @@ class User extends Visitor{
 
     get getId(){
         return this.#id
+    }
+
+    set setUsername(username) {
+      super.setUsername(username)
+      
+    }
+  
+    set setPassword(password) {
+     super.setPassword(password)
+    }
+  
+    get getUsername() {
+      super.getUsername()
+    }
+  
+    get getPassword() {
+      super.getPassword()
     }
 
     set setIdFilm(idFilm){
@@ -191,7 +212,7 @@ class User extends Visitor{
         return new Promise((resolve, reject) => {
         pool.getConnection( (err,connection) =>{ 
         try {
-        const query = "SELECT * FROM nguoi_dung_co_tai_khoan WHERE id = ?"
+        const query = "SELECT * FROM nguoi_dung_co_tai_khoan WHERE idNguoiDung = ?"
         if (err) throw err
         connection.query(
         query,
