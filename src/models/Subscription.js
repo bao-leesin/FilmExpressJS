@@ -93,9 +93,13 @@ class Subscription{
       return new Promise((resolve, reject) => {
       pool.getConnection( (err,connection) =>{ 
       try {
-      const query = "SELECT idGoi ,COUNT(*) AS soLanDangKi  FROM khach_hang_dang_ki_goi GROUP BY idGoi " +
-                    "HAVING COUNT(*) >= ALL "
-                    "( SELECT COUNT(*) FROM khach_hang_dang_ki_goi GROUP BY idGoi)";
+      const query = "SELECT A.idGoi , A.tenGoi, A.giaTien, A.chatLuong, COUNT(*) AS soLanDangKi "  +
+                   " FROM goi_xem_phim AS A INNER JOIN "+
+                    " khach_hang_dang_ki_goi AS B "+
+                    " ON A.idGoi = B.idGoi "+
+                    " GROUP BY idGoi "+
+                    "HAVING COUNT(*) >= ALL "+
+                    "( SELECT COUNT(*) FROM khach_hang_dang_ki_goi GROUP BY idGoi)"
       if (err) throw err
       connection.query(
       query,
