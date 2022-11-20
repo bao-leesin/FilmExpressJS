@@ -34,9 +34,9 @@ const getFilmById = async (req,res,next) => {
     let film = new Film()
     let actor = new Actor()
     let genre = new Genre()
-    const params = req.params
+ 
+    const idFilm = req.params.idPhim
     try {
-    const idFilm = params.idPhim
     film.setId = idFilm
     actor.setIdFilm = idFilm
     genre.setIdFilm = idFilm

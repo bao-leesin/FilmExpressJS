@@ -22,11 +22,9 @@ class User extends Visitor{
     #idSubscription;
     #subscriptionDay;
     #idPromotion
-    constructor(id,username,password,role,address,birthday,email,fullname,sex){
+    constructor(id,role,address,birthday,email,fullname,sex){
         super()
         this.#id = id
-        this.#username = username
-        this.#password = password
         this.#role = role
         this.#address =address
         this.#birthday = birthday
@@ -253,7 +251,7 @@ class User extends Visitor{
         return new Promise((resolve, reject) => {
         pool.getConnection( (err,connection) =>{ 
         try {
-        const query = "SELECT diaChi,ngaySinh,email,tenDayDu,gioiTinh FROM nguoi_dung_co_tai_khoan WHERE idNguoiDung = ?"
+        const query = "SELECT idNguoiDung,diaChi,ngaySinh,email,tenDayDu,gioiTinh FROM nguoi_dung_co_tai_khoan WHERE idNguoiDung = ?"
         if (err) throw err
         connection.query(
         query,
@@ -299,7 +297,7 @@ class User extends Visitor{
       if (err) throw err
       connection.query(
       query,
-      [this.#id,this.#idFilm],
+      [this.#idFilm,this.#id],
       (err,rows) =>{
       if (err) throw err
       // if(rows.length === 0) throw new NotFoundError() 

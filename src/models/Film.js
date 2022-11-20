@@ -164,7 +164,7 @@ class Film{
         return new Promise((resolve, reject) => {
           pool.getConnection( (err,connection) =>{ 
           try {
-            const query = "SELECT * FROM phim WHERE luotXem > ?"
+            const query = "SELECT idPhim, tenPhim FROM phim WHERE luotXem > ?"
             if (err) throw err
             connection.query(
               query,
@@ -185,7 +185,7 @@ class Film{
         return new Promise((resolve, reject) => {
           pool.getConnection( (err,connection) =>{ if (err) throw err
           try {
-              const query = "SELECT * FROM phim ORDER BY danhGiaPhim DESC  LIMIT ?"
+              const query = "SELECT idPhim, tenPhim FROM phim ORDER BY danhGiaPhim DESC  LIMIT ?"
             connection.query(
               query,
               [this.#top],
@@ -205,7 +205,7 @@ class Film{
         return new Promise((resolve, reject) => {
           pool.getConnection( (err,connection) =>{ 
          try {
-        const query = "SELECT * FROM phim ORDER BY ngayChieu DESC LIMIT ?"
+        const query = "SELECT idPhim, tenPhim FROM phim ORDER BY ngayChieu DESC LIMIT ?"
           if (err) throw err
          connection.query(
           query,

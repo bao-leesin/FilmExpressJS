@@ -16,8 +16,7 @@ const getAllUser = async (req,res,next) => {
 }
 
 const getUserInfo = async (req,res,next) => {
-    const params = req.params
-    const idUser = params.id
+    const idUser = req.params.idNguoiDung
     try {
         let user = new User()
         user.setId = idUser
@@ -85,16 +84,9 @@ const rateFilm = async (req,res,next) => {
 }
 
 const updateUserInfo = async (req,res,next) => {
-    const idUser = req.params.id
-    const info = req.body
+    const {idNguoiDung,vaiTro,diaChi,sinhNhat,email,tenDayDu,gioiTinh} = req.body
     try {
-        let user = new User();
-        user.setId = idUser
-        user.setAddress = info.address
-        user.setBirthday = info.birthday 
-        user.setEmail = info.email 
-        user.setFullname = info.fullname  
-        user.setSex = info.sex
+        let user = new User(idNguoiDung,vaiTro,diaChi,sinhNhat,email,tenDayDu,gioiTinh);
         await user.updateUserInfo()
         const data = await user.getUserInfo()
         res.send(data)
@@ -145,7 +137,7 @@ const getLikedFilm = async (req,res,next) => {
             const output = await user.getLikedFilm()
             console.log(output);
             if(!output.length) res.send('')
-            else res.send(likedFilms)
+            else res.send(output)
         } catch (error) {
             res.status(400).send(error.message)        
         }
