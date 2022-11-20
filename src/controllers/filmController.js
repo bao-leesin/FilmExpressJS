@@ -43,8 +43,10 @@ const getFilmById = async (req,res,next) => {
     const films = await film.getFilmById()
     const actors = await actor.getActorsByIdFilm()
     const genres = await genre.getGenresByIdFilm()
+    const images = await film.getFilmImages()
     films.dienVien = actors
     films.theLoai = genres
+    films.duongDanAnh = images
     res.send(films)
     } catch (error) {
         res.status(400).send(error.message)
@@ -91,7 +93,7 @@ const createFilm = async (req,res,next) => {
         duongDanAnh
     } = req.body
 try {
-    let film = new Film(tenPhim,moTa,danhGia,trailer,luotXem,ngayChieu)
+    let film = new Film(null,tenPhim,moTa,danhGia,trailer,luotXem,ngayChieu)
     let actor = new Actor()
     let genre = new Genre()
     await film.createFilm()
@@ -148,11 +150,10 @@ try {
             theLoai
         } = req.body
     try {
-        let film = new Film(tenPhim,moTa,danhGia,trailer,luotXem,ngayChieu)
+        let film = new Film(idPhim,tenPhim,moTa,danhGia,trailer,luotXem,ngayChieu)
         let actor = new Actor()
         let genre = new Genre()
-        await film.createFilm()
-        const idFilm = idPhim
+        await film.updateFilm()
         dienVien.forEach(async (actor) => {
             let actors = new Actor()
             actors.setIdFilm = idFilm

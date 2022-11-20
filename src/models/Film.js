@@ -303,7 +303,7 @@ class Film{
         if (err) throw err
         connection.query(
         query,
-        [null,this.#name,this.#description,this.#rating,this.#trailer,this.#view,this.#releaseDay],
+        [this.#id,this.#name,this.#description,this.#rating,this.#trailer,this.#view,this.#releaseDay],
         (err,rows) =>{
         if (err) throw err
         // if(rows.length === 0) throw new NotFoundError() 
