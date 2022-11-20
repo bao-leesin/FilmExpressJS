@@ -48,12 +48,22 @@ const getAllSub = async (req,res,next) => {
 }
 
 const getSubOfUser = async (req,res,next) => {
-    const idUser = req.params.idKhachHang
+    const idUser = req.params.idNguoiDung
     try {
         let sub = new Subscription()
         sub.setIdUser = idUser
         const output = await sub.getSubOfUser()
         res.send(output)
+    } catch (error) {
+        res.status(400).send(error.message)
+    }
+}
+
+const getHotSub = async (req,res,next) => {
+    try {
+        let sub = new Subscription()
+        const subs = await sub.getHotSub()
+        res.send(subs)
     } catch (error) {
         res.status(400).send(error.message)
     }
@@ -66,5 +76,6 @@ module.exports = {
     updateSub,
     deleteSub,
     getAllSub,
+    getHotSub,
     getSubOfUser
 }

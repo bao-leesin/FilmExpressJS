@@ -19,7 +19,7 @@ const User  = require("../models/User");
        const pwd = await bcryptCompare(matKhau, existentUser.matKhau)
        if (!pwd) throw new Error('')
       const jwt = await jwtSign(existentUser)
-      if (jwt) res.send(jwt)
+      res.send({token: jwt})
      } catch (error) {
       res.status(400).send(error)
      }
@@ -37,9 +37,9 @@ const User  = require("../models/User");
     }
     const newUser = await user.getUserById()
       const jwt = await jwtSign(newUser[0])
-      res.send(jwt)
+      res.send({token: jwt})
   }catch (error){
-    res.status(400).send(error)
+    res.status(400).send(error.message)
   }
 }
 

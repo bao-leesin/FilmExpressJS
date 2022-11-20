@@ -178,7 +178,7 @@ class Complain{
         if (err) throw err
         if(rows.length === 0) throw new NotFoundError() 
         this.#id = rows.insertId 
-        resolve(rows.insertId)
+        resolve(rows)
         })
         connection.release()
         }catch (error) {

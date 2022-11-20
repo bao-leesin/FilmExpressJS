@@ -11,6 +11,7 @@ function route(app) {
     app.use('/apis/',visitorRouter)   
     app.use('/apis/film/',filmRouter)
     app.use('/apis/user/',userRouter)
+    app.use('/apis/admin/',userRouter)
     app.use('/apis/actor/',actorRouter)
     app.use('/apis/notification/',notificationRouter)    
     app.use('/apis/subscription/',subscriptionRouter)

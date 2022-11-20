@@ -10,8 +10,9 @@ class Notification{
     #id;
     #title;
     #content;
-    constructor(title,content){
-        this.#title = title
+    constructor(id,title,content){
+      this.#id = id  
+      this.#title = title
         this.#content = content
     }
 
@@ -43,6 +44,7 @@ class Notification{
         pool.getConnection( (err,connection) =>{ 
         try {
         const query = "INSERT INTO thong_bao VALUES(?,?,?)"
+     
         if (err) throw err
         connection.query(
         query,

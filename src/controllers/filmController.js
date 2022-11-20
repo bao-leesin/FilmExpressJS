@@ -56,13 +56,37 @@ const getFilmById = async (req,res,next) => {
 const getFilmByGenres = async (req,res,next) => {
     const object = req.body;
     const genres = object.genres;
-    let film = new Film()
-    film.setGenre = genres
     try {
+        let film = new Film()
+        film.setGenre = genres
     const films = await  film.getFilmByGenres()
     res.send(films)
     } catch (error) {
     res.status(400).send(error.message)
+    }
+}
+
+const getFilmByViews = async (req,res,next) => {
+    const view = req.params.luotXem
+    try {
+        let film = new Film()
+        film.setView = view
+        const output = film.getFilmByViews()
+        res.send(output)
+    } catch (error) {
+        res.status(400).send(error.message)
+    }
+}
+
+const getFilmByRating = async (req,res,next) => {
+    const rating = req.params.danhGia
+    try {
+        let film = new Film()
+        film.setRating = rating
+        const output = film.getFilmByRatings()
+        res.send(output)
+    } catch (error) {
+        res.status(400).send(error.message)
     }
 }
 
@@ -236,6 +260,8 @@ try {
     getFilmByGenres,
     getFilmByName,
     getFilmById,
+    getFilmByRating,
+    getFilmByViews,
     createFilm,
     updateFilm,
     deleteFilm,

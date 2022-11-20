@@ -89,6 +89,28 @@ class Subscription{
       }})})
     }
 
+    getHotSub(){
+      return new Promise((resolve, reject) => {
+      pool.getConnection( (err,connection) =>{ 
+      try {
+      const query = "SELECT idGoi ,COUNT(*) AS soLanDangKi  FROM khach_hang_dang_ki_goi GROUP BY idGoi " +
+                    "HAVING COUNT(*) >= ALL "
+                    "( SELECT COUNT(*) FROM khach_hang_dang_ki_goi GROUP BY idGoi)";
+      if (err) throw err
+      connection.query(
+      query,
+      [],
+      (err,rows) =>{
+      if (err) throw err
+      resolve(rows)
+      })
+      connection.release()
+      }catch (error) {
+      reject(error)
+      console.log(error)
+      }})})
+    }
+
     createSub(){
         return new Promise((resolve, reject) => {
         pool.getConnection( (err,connection) =>{ 
@@ -115,7 +137,7 @@ class Subscription{
         return new Promise((resolve, reject) => {
         pool.getConnection( (err,connection) =>{ 
         try {
-        const query = "UPDATE goi_xem_phim SET tenGoi = ?, giaTien = ?, thoiHanGoi = ? WHERE idGoi = ?"
+        const query = "UPDATE goi_xem_phim SET tenGoi = ?, giaTien = ?, chatLuong = ? WHERE idGoi = ?"
         if (err) throw err
         connection.query(
         query,

@@ -108,7 +108,7 @@ class Request{
       [this.#id, this.#nameFilm, this.#idUser, this.#time, this.#status],
       (err,rows) =>{
       if (err) throw err
-      resolve(rows.insertId)
+      resolve(rows)
       })
       connection.release()
       }catch (error) {

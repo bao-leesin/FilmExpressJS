@@ -28,13 +28,13 @@ const getUserInfo = async (req,res,next) => {
 }
 
 const subscribe = async (req,res,next) => {
-    const  {idKhachHang,idGoi,ngayDangKy,idKhuyenMaiSuDung} = req.body
+    const  {idKhachHang,idGoi,ngayDangKiGoi,khuyenMaiSuDung} = req.body
     try {
         let user = new User()
         user.setId = idKhachHang
         user.setSubsciption = idGoi
-        user.setSubsciptionDay = ngayDangKy
-        user.setPromotion = idKhuyenMaiSuDung
+        user.setSubsciptionDay = ngayDangKiGoi
+        user.setPromotion = khuyenMaiSuDung
         const output =  await user.subscribe()
         if (!output) res.status(400).send({ketQua: "Thất bại"})
         else res.send({ketQua: "Thành công"})
@@ -86,7 +86,7 @@ const rateFilm = async (req,res,next) => {
 const updateUserInfo = async (req,res,next) => {
     const {idNguoiDung,vaiTro,diaChi,sinhNhat,email,tenDayDu,gioiTinh} = req.body
     try {
-        let user = new User(idNguoiDung,vaiTro,diaChi,sinhNhat,email,tenDayDu,gioiTinh);
+        let user = new User(idNguoiDung,null,null,vaiTro,diaChi,sinhNhat,email,tenDayDu,gioiTinh);
         await user.updateUserInfo()
         const data = await user.getUserInfo()
         res.send(data)
@@ -130,7 +130,6 @@ const unlikeFilm = async (req,res,next) => {
 }
 const getLikedFilm = async (req,res,next) => {
         const idNguoiDung = req.params.idNguoiDung
-    
         try {
             let user = new User()
             user.setId = idNguoiDung

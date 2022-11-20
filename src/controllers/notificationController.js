@@ -2,10 +2,11 @@ const Notification = require("../models/Notification")
 
 const createNoti = async (req,res,next) => {
 const {tieuDeThongBao,noiDungThongBao} = req.body
+
     try {
         let noti = new Notification(null,tieuDeThongBao,noiDungThongBao)
         await noti.createNoti()
-        const notis = noti.getAllNoti()
+        const notis =  await noti.getAllNoti()
         res.send(notis) 
     } catch (error) {
         res.status(400).send(error)
@@ -13,11 +14,11 @@ const {tieuDeThongBao,noiDungThongBao} = req.body
 }
 
 const updateNoti  = async (req,res,next) => {
-    const input = req.body
+    const {idThongBao,tieuDeThongBao,noiDungThongBao} = req.body
     try {
-        let noti = new Notification(input)
-        await noti.createNoti()
-        const notis = noti.getAllNoti()
+        let noti = new Notification(idThongBao,tieuDeThongBao,noiDungThongBao)
+        await noti.updateNoti()
+        const notis = await noti.getAllNoti()
         res.send(notis) 
     } catch (error) {
         res.status(400).send(error)

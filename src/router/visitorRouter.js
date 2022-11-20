@@ -4,7 +4,7 @@ const visitorController = require('../controllers/visitorController')
 
 router.use('/login', visitorController.login);
 router.use('/register', visitorController.register);
-router.get('/homePage',visitorController.showHomePage)
+router.use('/homePage',visitorController.showHomePage)
 
    
 

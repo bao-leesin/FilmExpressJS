@@ -22,9 +22,11 @@ class User extends Visitor{
     #idSubscription;
     #subscriptionDay;
     #idPromotion
-    constructor(id,role,address,birthday,email,fullname,sex){
+    constructor(id,username,password,role,address,birthday,email,fullname,sex){
         super()
         this.#id = id
+        this.#username = username
+        this.#password = password
         this.#role = role
         this.#address =address
         this.#birthday = birthday
@@ -173,7 +175,7 @@ class User extends Visitor{
                 (err, rows) => {
                   if (err) throw err;
                   this.#id = rows.insertId 
-                  resolve(rows.insertId)
+                  resolve(rows)
                 }
               );
               connection.release();
@@ -189,14 +191,14 @@ class User extends Visitor{
         return new Promise((resolve, reject) => {
         pool.getConnection( (err,connection) =>{ 
         try {
-        const query = "INSERT INTO khach_hang_dang_ky_goi VALUES(?,?,?,?)"
+        const query = "INSERT INTO khach_hang_dang_ki_goi VALUES(?,?,?,?)"
         if (err) throw err
         connection.query(
         query,
         [this.#id,this.#idSubscription,this.#subscriptionDay,this.#idPromotion],
         (err,rows) =>{
-        if (err) throw err
-        resolve(rows.insertId)
+        if (err) throw new Error('')
+        resolve(rows)
         })
         connection.release()
         }catch (error) {
@@ -352,8 +354,6 @@ class User extends Visitor{
       }})})
     }
 
-
-   
 }
 
 module.exports = User
