@@ -11,12 +11,13 @@ class Complain{
     #id;
     #title;
     #content;
+    #idTopic;
     #topic;
     #solution;
     #idUser;
     #idAdmin;
 
-    set setId(id) {
+      set setId(id) {
         this.#id = id;
       }
     
@@ -37,6 +38,30 @@ class Complain{
     
       get getContent() {
         return this.#content;
+      } 
+
+      set setIdTopic(idTopic) {
+        this.#idTopic = idTopic;
+      }
+    
+      get getIdTopic() {
+        return this.#idTopic;
+      }
+
+      set setTopic(topic) {
+        this.#topic = topic;
+      }
+    
+      get getTopic() {
+        return this.#topic;
+      } 
+
+      set setSolution(solution) {
+        this.#solution = solution;
+      }
+    
+      get getSolution() {
+        return this.#solution;
       } 
 
     constructor(topic,title,content,solution){
@@ -73,18 +98,38 @@ class Complain{
       }})})
     }
 
-    getComplainByTopic(){
+    // getComplainByTopic(){
+    //   return new Promise((resolve, reject) => {
+    //   pool.getConnection( (err,connection) =>{ 
+    //   try {
+    //   const query = "SELECT  "
+    //   if (err) throw err
+    //   connection.query(
+    //   query,
+    //   [],
+    //   (err,rows) =>{
+    //   if (err) throw err
+    //   if(rows.length === 0) throw new NotFoundError() 
+    //   resolve(rows)
+    //   })
+    //   connection.release()
+    //   }catch (error) {
+    //   reject(error)
+    //   console.log(error)
+    //   }})})
+    // }
+
+    getSolutionForTopic(){
       return new Promise((resolve, reject) => {
       pool.getConnection( (err,connection) =>{ 
       try {
-      const query = "SELECT  "
+      const query = "SELECT cachGiaiQuyet FROM chu_de_khieu_nai__ds_phuong_huong_giai_quyet where idChuDe = ?"
       if (err) throw err
       connection.query(
       query,
-      [],
+      [this.#idTopic],
       (err,rows) =>{
       if (err) throw err
-      if(rows.length === 0) throw new NotFoundError() 
       resolve(rows)
       })
       connection.release()
@@ -128,7 +173,7 @@ class Complain{
         if (err) throw err
         connection.query(
         query,
-        [null,this.#idUser,this.#title,this.#content],
+        [this.#id,this.#idUser,this.#title,this.#content],
         (err,rows) =>{
         if (err) throw err
         if(rows.length === 0) throw new NotFoundError() 
@@ -163,6 +208,8 @@ class Complain{
         }})})
     }
 
+    
+
     createComplainListWithTopic(){
         return new Promise((resolve, reject) => {
         pool.getConnection( (err,connection) =>{ 
@@ -184,7 +231,7 @@ class Complain{
         }})})
     }
 
-    createTopicSolution(){
+    createSolutionForTopic(){
         return new Promise((resolve, reject) => {
         pool.getConnection( (err,connection) =>{ 
         try {
@@ -192,7 +239,7 @@ class Complain{
         if (err) throw err
         connection.query(
         query,
-        [this.#topic,this.#idAdmin,this.#content],
+        [this.#topic,this.#idAdmin,this.#solution],
         (err,rows) =>{
         if (err) throw err
         if(rows.length === 0) throw new NotFoundError() 
@@ -253,10 +300,6 @@ class Complain{
         console.log(error)
         }})})
     }
-
-
-    
-
-
-
 }
+
+module.exports = Complain

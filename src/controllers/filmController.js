@@ -66,7 +66,8 @@ const getFilmByGenres = async (req,res,next) => {
 
 
 const getFilmByName = async (req,res,next) => {
-    const searchingWord = req.query.search    
+    const searchingWord = req.params.keyword    
+    console.log(searchingWord);
     const film = new Film();
     film.setName = searchingWord
     try {
@@ -75,7 +76,6 @@ const getFilmByName = async (req,res,next) => {
     } catch (error) {
         next(error)
     }
-
 }
 
 const createFilm = async (req,res,next) => {
@@ -198,21 +198,7 @@ try {
     }
 
 
-   const createRatingFilm = async (req,res,next) => {
-        const {idKhachHang,idPhim,soSaoDanhGia} = req.body
-        try {
-            let film = new Film()
-            film.setIdUser = idKhachHang
-            film.setId = idPhim
-            film.setRating = soSaoDanhGia
-            await film.rateFilm()
-            await film.updateRatingFilm()
-            const rating = await film.showRatingFilm()
-            res.send({danhGia: rating})            
-        } catch (error) {
-            res.status(400).send(error.message)
-        }
-   }
+   
 
    const showRatingFilm = async (req,res,next) => {
         const idFilm = req.params.id
@@ -252,7 +238,6 @@ try {
     createFilm,
     updateFilm,
     deleteFilm,
-    createRatingFilm,
     showRatingFilm,
     createFilmImages
 }

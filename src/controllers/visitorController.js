@@ -11,51 +11,33 @@ const User  = require("../models/User");
 
 
   const login = async (req,res,next) => {
-    const account = req.body;
-    let visitor = new Visitor();
-    visitor.setUsername = account.username;
-    visitor.setPassword = account.password;
-    const password = visitor.getPassword;
+    const {tenDangNhap,matKhau} = req.body;
+    let visitor = new Visitor(tenDangNhap,matKhau);
     try {
        const existentUser = await visitor.signIn();
-       if (!existentUser) throw new NotFoundError("sign in first")
-       const pwd = await bcryptCompare(password, existentUser.matKhau)
-       if (!pwd) throw new ValidationError("Wrong password")
+       if (!existentUser) throw new Error('')
+       const pwd = await bcryptCompare(matKhau, existentUser.matKhau)
+       if (!pwd) throw new Error('')
       const jwt = await jwtSign(existentUser)
       if (jwt) res.send(jwt)
      } catch (error) {
-      res.send(error.message)
+      res.status(400).send(error)
      }
    }
 
    const register = async (req,res,next) => {
-   const tenDangNhap = req.body.tenDangNhap
-   const matKhau = req.body.matKhau
-   const vaiTro = req.body.vaiTro
-   const diaChi = req.body.diaChi
-   const ngaySinh = req.body.ngaySinh
-   const email = req.body.email
-   const tenDayDu = req.body.tenDayDu
-   const gioiTinh = req.body.gioiTinh
-
-    console.log(tenDangNhap);
-
+    const {tenDangNhap,matKhau,vaiTro,diaChi,ngaySinh,email,tenDayDu,gioiTinh} = req.body
     try { 
-    if (!tenDangNhap) throw new FieldRequiredError(`A tenDangNhap`);
-    if (!matKhau) throw new FieldRequiredError(`A matKhau`);
-    if (!vaiTro) throw new FieldRequiredError(`A vaiTro`);
-    if (!diaChi) throw new FieldRequiredError(`A diaChi`);
-    if (!email) throw new FieldRequiredError(`A email`);
-   
     const hashPassword = await bcryptHash(matKhau);
     let user = new User(null,tenDangNhap,hashPassword,vaiTro,diaChi,ngaySinh,email,tenDayDu,gioiTinh);
-    await user.signUp()
+    const result =  await user.signUp()
+    if (!result){
+      res.status(400).send("Bạn đã có tài khoản rồi, cố mà đăng nhập đi. Tôi chưa làm được chức năng lấy lại mật khẩu đâu")
+      return
+    }
     const newUser = await user.getUserById()
-      res.send(newUser)
-    if(newUser){
-      const jwt = await jwtSign(newUser)
+      const jwt = await jwtSign(newUser[0])
       res.send(jwt)
-    } 
   }catch (error){
     res.status(400).send(error)
   }

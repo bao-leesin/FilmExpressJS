@@ -151,7 +151,6 @@ class Film{
       [],
       (err,rows) =>{
       if (err) throw err
-      // if(rows.length === 0) throw new NotFoundError() 
       resolve(rows)
       })
       connection.release()
@@ -186,7 +185,7 @@ class Film{
         return new Promise((resolve, reject) => {
           pool.getConnection( (err,connection) =>{ if (err) throw err
           try {
-              const query = "SELECT * FROM phim ORDER BY DESC  LIMIT ?"
+              const query = "SELECT * FROM phim ORDER BY danhGiaPhim DESC  LIMIT ?"
             connection.query(
               query,
               [this.#top],
@@ -396,7 +395,7 @@ class Film{
         if (err) throw err
         connection.query(
         query,
-        [],
+        [this.#id,this.#rating],
         (err,rows) =>{
         if (err) throw err
         resolve(rows)

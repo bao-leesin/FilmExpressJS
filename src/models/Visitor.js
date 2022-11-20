@@ -40,9 +40,7 @@ class Visitor {
           if (err) throw err;
           connection.query(query, [this.#username], (err, rows) => {
             if (err) throw err;
-            if (rows.length === 0)
-              throw new NotFoundError("Không có tài khoản");
-            else resolve(rows[0]);
+           resolve(rows[0]);
           });
           connection.release();
         } catch (error) {

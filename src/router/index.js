@@ -5,6 +5,7 @@ const actorRouter = require('./actorRouter')
 const subscriptionRouter = require('./subscriptionRouter')
 const notificationRouter = require('./notificationRouter')
 const promotionRouter = require('./promotionRouter')
+const complainRouter = require('./complainRouter')
 
 function route(app) {
     app.use('/apis/',visitorRouter)   
@@ -14,6 +15,8 @@ function route(app) {
     app.use('/apis/notification/',notificationRouter)    
     app.use('/apis/subscription/',subscriptionRouter)
     app.use('/apis/promotion/', promotionRouter)
+    app.use('/apis/complain/', complainRouter)
+    app.use('/apis/request/', complainRouter)
 
 }
 

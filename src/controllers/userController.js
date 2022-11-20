@@ -1,5 +1,9 @@
 const User = require("../models/User");
-const Subscription = require("../models/Subscription")
+const Complain = require("../models/Complain");
+const Request = require("../models/Request");
+const Film = require("../models/Film");
+
+
 
 const getAllUser = async (req,res,next) => {
     try {
@@ -24,20 +28,57 @@ const getUserInfo = async (req,res,next) => {
     }
 }
 
-
 const subscribe = async (req,res,next) => {
     const  {idKhachHang,idGoi,ngayDangKy,idKhuyenMaiSuDung} = req.body
     try {
         let user = new User()
-        let subscription = new Subscription()
         user.setId = idKhachHang
         user.setSubsciption = idGoi
         user.setSubsciptionDay = ngayDangKy
         user.setPromotion = idKhuyenMaiSuDung
-        await user.subscribe()
-        subscription.setIdUser = idKhachHang
-        const output = subscription.getAllSub()
-        res.send(output)
+        const output =  await user.subscribe()
+        if (!output) res.status(400).send({ketQua: "Thất bại"})
+        else res.send({ketQua: "Thành công"})
+    } catch (error) {
+        res.status(400).send(error.message)
+    }
+}
+
+const requestFilm = async (req,res,next) => {
+    const {idKhachHangYeuCau,phimYeuCau,trangThai} = req.body
+    try {
+        let request = new Request(null,idKhachHangYeuCau,phimYeuCau,trangThai)
+        const output = await request.createRequest()
+        if (!output) res.status(400).send({ketQua: "Thất bại"})
+        else res.send({ketQua: "Thành công"})
+    } catch (error) {
+        res.status(400).send(error.message)
+    }
+}
+
+const complain = async (req,res,next) => {
+    const {idNguoiDung,tieuDeKhieuNai,noiDungKhieuNai} = req.body
+    try {
+        let complain = new Complain()
+        const output = await complain.createComplain(null,idNguoiDung,tieuDeKhieuNai,noiDungKhieuNai)
+        if (!output) res.status(400).send({ketQua: "Thất bại"})
+        else res.send({ketQua: "Thành công"})
+    } catch (error) {
+        res.status(400).send(error.message)
+    }
+}
+
+const rateFilm = async (req,res,next) => {
+    const {idKhachHang,idPhim,soSaoDanhGia} = req.body
+    try {
+        let film = new Film()
+        film.setIdUser = idKhachHang
+        film.setId = idPhim
+        film.setRating = soSaoDanhGia
+        await film.rateFilm()
+        await film.updateRatingFilm()
+        const rating = await film.showRatingFilm()
+        res.send({danhGia: rating})            
     } catch (error) {
         res.status(400).send(error.message)
     }
@@ -63,10 +104,64 @@ const updateUserInfo = async (req,res,next) => {
 }
 
 
+const likeFilm = async (req,res,next) => {
+        const {idNguoiDung,idPhim} = req.body
+        try {
+            let user = new User()
+            user.setIdFilm = idPhim
+            user.setId = idNguoiDung
+            await user.likeFilm()
+            const likedFilms = await user.getLikedFilm()
+            if (!likedFilms.length) res.send('')
+            else res.send(likedFilms)
+            
+        } catch (error) {
+            res.status(400).send(error.message)            
+        }
+
+}
+
+const unlikeFilm = async (req,res,next) => {
+        const {idNguoiDung,idPhim} = req.body
+        try {
+           let user = new User()
+           user.setIdFilm = idPhim
+           user.setId = idNguoiDung
+           await user.unlikeFilm()
+           const likedFilms = await user.getLikedFilm()
+            if (!likedFilms.length) res.send('')
+            else res.send(likedFilms)
+            
+        } catch (error) {
+            res.status(400).send(error.message)            
+        }
+}
+const getLikedFilm = async (req,res,next) => {
+        const idNguoiDung = req.params.idNguoiDung
+    
+        try {
+            let user = new User()
+            user.setId = idNguoiDung
+            const output = await user.getLikedFilm()
+            console.log(output);
+            if(!output.length) res.send('')
+            else res.send(likedFilms)
+        } catch (error) {
+            res.status(400).send(error.message)        
+        }
+}
+
 
 module.exports = {
     getUserInfo,
     updateUserInfo,
     getAllUser,
     subscribe,
+    complain,
+    rateFilm,
+    requestFilm,
+    likeFilm,
+    unlikeFilm,
+    getLikedFilm
+    
 }

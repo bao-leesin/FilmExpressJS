@@ -2,15 +2,15 @@ const express = require('express')
 const router = express.Router()
 const filmController = require('../controllers/filmController')
 
-router.post('/filter/genres', filmController.getFilmByGenres)
-router.get('/search/name',filmController.getFilmByName)
 router.get('/show',filmController.getAllFilm)
-router.get('/search/id/:id', filmController.getFilmById)
+router.get('/id/show/:idPhim', filmController.getFilmById)
+router.use('/rating/show/:idPhim',filmController.showRatingFilm)
+router.get('/name/search/:keyword',filmController.getFilmByName)
+router.post('/filter/genres', filmController.getFilmByGenres)
 router.use('/create', filmController.createFilm)
-router.use('/update/:id', filmController.createFilm)
-router.use('/delete/:id', filmController.createFilm)
-router.post('/rating/create', filmController.createRatingFilm)
-router.use('/rating/search/:id',filmController.showRatingFilm)
+router.use('/update/:idPhim', filmController.createFilm)
+router.use('/delete/:idPhim', filmController.createFilm)
+
 
 
 module.exports = router

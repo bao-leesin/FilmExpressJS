@@ -154,10 +154,9 @@ class User extends Visitor{
               if (err) throw err;
               connection.query(query, [this.#username], (err, rows) => {
                 if (err) throw err;
-                if (rows.length !== 0)
-                  throw new AlreadyTakenError(
-                    "Bạn đã có tài khoản rồi, cố mà đăng nhập đi. Tôi chưa làm được chức năng lấy lại mật khẩu đâu"
-                  );
+                if (rows.length !== 0) 
+                resolve(false)
+                return 
               });
     
               connection.query(
@@ -199,7 +198,7 @@ class User extends Visitor{
         [this.#id,this.#idSubscription,this.#subscriptionDay,this.#idPromotion],
         (err,rows) =>{
         if (err) throw err
-        resolve(rows)
+        resolve(rows.insertId)
         })
         connection.release()
         }catch (error) {
